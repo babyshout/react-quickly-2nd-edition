@@ -1,0 +1,94 @@
+# 5장 state
+
+
+#### destructuring
+
+const {value, set} = obj = {value: 'im value', set: 'im set'}
+undefiend
+
+obj
+{value: 'im value', set: 'im set'}
+
+value
+'im value'
+
+set
+'im set'
+
+
+const {value: counter, set: setCounter} = obj
+
+counter
+'im counter'
+
+setCounter
+'im set'
+
+const {value: 'counter', set: 'setCounter'} = obj
+Uncaught SyntaxError: Invalid destructuring assignment target
+
+
+#### state 초기화 방법
+
+##### 첫번째 초기값만 중요
+처음에들어간 state 만 상태의 값으로 사용됨...
+(상위 컴포넌트에서 state 의 변화가 있어도.. 하위 컴포넌트가 이미
+인스턴스화 (엘리먼트) 되었으면.. state 는 인스턴스화 당시의 state 로 고정)
+
+
+
+
+##### 초기화 함수 (초기값을 함수를 통해 만들기)
+가장 간단히..
+const [password, setPassword] = useState(generatePassword());
+-> 단점..!!!!! 모든 렌더링에서 generatePassword() 함수가 실행됨!!!
+
+
+이를 위해 초기값 대신, 초기값을 반환하는 함수를 useState 에 던져줄수 있음!!
+
+
+일반적인 방법
+const [passowrd, setPassword] = useState(() => generatePassword());
+이건 해석이 어려움..
+함수를 인자로 던져주고, 해당 함수의 리턴은 generatePassword() 라는 뜻??
+
+더 간단히
+const [password, setPassword] = useState(generatePassword)
+(해당 함수만 던져줌..!)
+
+
+
+##### 함수로 초기화하기 (state 에 함수를 넣기)
+
+const OPERATORS = {
+      ADDITION: (a, b) => a + b,
+      SUBTRACTION: (a, b) => a - b,
+      PRODUCT: (a, b) => a * b,
+}
+
+const [operator, setOperator] = useState(OPERATORS.ADDITION);
+-> 해당 함수를 초기화 함수롤 취급하고 호출함..
+
+---
+
+#### state 에 변수를 넣는방법..
+
+static 값으로 설정..
+
+함수를 넣는방법..
+
+const [operator, setOperator] = useState(() => OPERATOR)
+
+setOperator(() => ANOTHER_OPERATOR)
+
+
+state 에 함수를 넣어서 사용할수 있는거에 주목... (자바스크립트에선 모든게 객체.. 프로토타입)
+
+
+---
+---
+
+### state 에 값 저장할때.. 같은 참조면 렌더링을 안함
+(리액트는 같은 참조인지만 확인하기 때문.. -> 값을 확인하면 성능상의 문제가 생길듯..?)
+
+
