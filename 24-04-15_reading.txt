@@ -1,0 +1,158 @@
+5.6 요약
+
+  
+
+  
+    
+      컴포넌트 state는 애플리케이션을 인터랙티브하게 만드는 데 사용됩니다. 상태 저장 컴포넌트가 없다면 애플리케이션 개발에서 거의 아무 것도 얻을 수 없습니다.
+    
+
+    
+      클래스 기반 컴포넌트와 함수형 컴포넌트 모두에 state를 가질 수 있습니다.
+    
+
+    
+      함수형 컴포넌트의 상태는 상태 값마다 별도의 설정자가 있는 useState에 대한 별도의 별개의 호출로 초기화됩니다.
+    
+
+    
+      정적 값, 동적 값 또는 초기 값을 반환하는 함수를 제공하여 useState 훅의 값을 초기화할 수 있습니다.
+    
+
+    
+      useState hook의 값은 언제든지 업데이트할 수 있지만, 콜백이나 다른 훅에서만 업데이트할 수 있고 컴포넌트 정의에서 직접 업데이트할 수는 없습니다.
+    
+
+    
+      useState hook의 값을 업데이트할 때 새 값을 직접 제공하거나 이전 값을 기반으로 새 값을 반환하는 함수를 제공할 수 있습니다.
+    
+
+    
+      클래스 기반 컴포넌트의 상태는 단일 객체로 초기화되고 setState 메서드를 사용하여 업데이트됩니다.
+    
+
+    
+      상태 저장 클래스 기반 컴포넌트에서 상태 저장 함수형 컴포넌트로 변환하려면 두 접근 방식이 크게 다르기 때문에 더 큰 규모의 리팩터링이 필요할 수 있습니다. - <리액트 Quickly Second Edition>, 모튼 바클런드 - 밀리의 서재 https://www.millie.co.kr/v3/bookDetail/202c2651fc0f46b6
+
+
+
+
+## 6장
+
+### effect 함수!!
+```javascript
+function Component() {
+      useEffect(
+            function effect() {
+                  // some effect here
+                  return function cleanup() {
+                        // some cleanup here
+                  };
+            },
+            [dependency1, 2, ...]
+      );
+      // rest of Component
+}
+```
+
+
+cleanup 함수만 필요한 경우..
+이펙트 함수에서 함수만 반환하면 됨..
+(람다식 복잡함에 주의...)
+
+```javascript
+function Dialog() {
+      useEffect(
+            () => () => trackEvent('dialog_dismissed'),
+            []
+      )
+}
+```
+
+
+---
+---
+
+state 가 setter 를 통해 바껴야 하므로... 
+부모객체에서 단순히 let 하고, 해당 변수를 바꿔줘도 렌더링이 바뀌지 않음..
+useState() 를 사용해서 state 를 만들고
+setter 를 통해서 바꿔주자!!!
+
+// function App() {
+
+/**
+ * state 가 setter 를 통해 바껴야 하므로... 
+ *  부모객체에서 단순히 let 하고, 해당 변수를 바꿔줘도 렌더링이 바뀌지 않음..
+ * useState() 를 사용해서 state 를 만들고
+ * setter 를 통해서 바꿔주자!!!
+ * 
+ */
+
+//   let title = 'First post';
+//   let body = <p>Welcome to my cool website.</p>
+//   return (
+//     <main>
+//       <BlogPost title={title} body={body} />
+//       <button onClick={() => {
+//   title = 'Second post';
+//   body = <p>Welcome to my cool second website.</p>
+//       }}>
+//         click to change the props
+//       </button>
+//     </main>
+//   );
+// }
+
+function App() {
+  const [title, setTitle] = useState("First post");
+  const [body, setBody] = useState(<p>Welcome to my cool website.</p>);
+
+  return (
+    <main>
+      <BlogPost title={title} body={body} />
+      <button
+        onClick={() => {
+          setTitle("Second post");
+          setBody(<p>Welcome to my cool second website.</p>);
+        }}
+      >
+        click to change the props
+      </button>
+    </main>
+  );
+}
+
+
+
+렌더링 할때 children!!!!!
+
+property 로 자식 객체가 자동으로 넘어옴
+디스트럭쳐링으로 children 하고 받아주면 사용준비 끝!!
+(리턴해주는 곳에서 {children} 으로 사용해주자!!)
+
+
+
+### layoutEffect 함수!!
+```javascript
+function Component() {
+      useEffect(
+            function effect() {
+                  // some effect here
+                  return function cleanup() {
+                        // some cleanup here
+                  };
+            },
+            [dependency1, 2, ...]
+      );
+      useLayoutEffect(
+            () => {
+                  // layout effect
+                  return () => {
+                        // layout cleanup
+                  }
+            },
+            [dep1, dep2, ...]
+      );
+      // rest of Component
+}
+```
