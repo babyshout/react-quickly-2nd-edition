@@ -4,12 +4,22 @@ function CountDown({ from }) {
   const [seconds, setSeconds] = useState(from);
   const [isRunning, setRunning] = useState(false);
 
+  /**
+   * 렌더링 요소가 업데이트 될때.. (setState 를 통해서..)
+   * effect() 진행 후, cleanup() 진행되니까..!
+   * 위에 if 문으로 진행...?
+   * return에 cleanup() 가 없는데.. 위에는???
+   * 
+   * 아니면 아래의 effect 진행 후, 해당 effect 가 종료되면.. cleanup() 진행..?
+   * 
+   * 맞음 !!!!!! 로그 확인!!
+   */
   useEffect(() => {
-    console.log('effect setup function called!!!')
+    console.log('effect function called!!!')
 
     if (!isRunning) {
       console.log("isRunning is false!!")
-      return;
+      return () => console.log('!isRunning\'s cleanup function!!');
     }
 
     const interval = setInterval(
@@ -21,11 +31,12 @@ function CountDown({ from }) {
           }
           return value - 1;
         }),
-      1000
+      300
     );
     return () => {
-      console.log('cleanup function called!!')
-      clearInterval(interval);}
+      console.log('normal cleanup function called!!')
+      clearInterval(interval);
+    }
   }, [isRunning]);
 
   return (
