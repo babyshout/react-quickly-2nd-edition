@@ -1,0 +1,19 @@
+
+
+#### Context.Provider value
+
+createContext("기본값") 넣어주면,
+해당 콘텍스트 프로바이더가 선언되지 않은곳에서 접근할때 해당 기본값이 나옴
+그외에, 
+<Context.Provider>
+형식으로 사용하고 싶다면,
+value={value what you wanna}
+를 넣어줘야 함
+
+```javascript
+<Context.Provider value={"value what you wanna use}>
+  <A />
+  <B />
+  <C />
+</Context.Provider>
+
