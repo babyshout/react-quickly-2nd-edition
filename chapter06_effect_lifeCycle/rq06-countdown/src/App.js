@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
 
+function useToggle(defaultValue = false) {
+  const [value, setter] = useState(Boolean(defaultValue))
+  const toggle = () => setter(v => !v)
+
+  return [value, toggle]
+}
+
 function CountDown({ from }) {
   const [seconds, setSeconds] = useState(from);
-  const [isRunning, setRunning] = useState(false);
+  // const [isRunning, setRunning] = useState(false);
+  const [isRunning, toggleRunning] = useToggle();
 
   /**
    * 렌더링 요소가 업데이트 될때.. (setState 를 통해서..)
@@ -25,9 +33,10 @@ function CountDown({ from }) {
     const interval = setInterval(
       () =>
         setSeconds((value) => {
-          if (value <= 1) {
+          if (value < 1) {
             console.log('value <= 1 is true !! setRunning(false)')
-            setRunning(false);
+            // setRunning(false);
+            toggleRunning()
           }
           return value - 1;
         }),
@@ -37,13 +46,14 @@ function CountDown({ from }) {
       console.log('normal cleanup function called!!')
       clearInterval(interval);
     }
-  }, [isRunning]);
+  }, [isRunning, toggleRunning]);
 
   return (
     <section>
       <h2>Time left: {seconds} seconds</h2>
       <button onClick={() => setSeconds(from)}>Reset</button>
-      <button onClick={() => setRunning((v) => !v)} disabled={seconds === 0}>
+      {/* <button onClick={() => setRunning((v) => !v)} disabled={seconds === 0}> */}
+      <button onClick={() => toggleRunning()} disabled={seconds === 0}>
         {isRunning ? "Pause" : "Resume"}
       </button>
     </section>
