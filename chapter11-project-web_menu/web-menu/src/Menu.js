@@ -1,9 +1,8 @@
-import { useContext } from "react";
 import MenuItem from "./MenuItem.js";
-import MenuContext from './MenuItemsContext.js'
+import {useMenuContext} from './MenuContext.js'
 
 function Menu() {
-  const menuContext = useContext(MenuContext);
+  const menuContext = useMenuContext();
   console.log(menuContext)
   return (
     <nav className="menu">
